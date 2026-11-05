@@ -85,10 +85,13 @@ document.addEventListener('click', (event) => {
 });
 document.addEventListener('keydown', (event) => {
   if (event.key !== 'Escape') return;
-  const openGroup = groups.find((group) => group.classList.contains('open') || group.contains(document.activeElement));
+  // First Escape closes an open dropdown, the next one closes the phone menu.
+  const openGroup = groups.find((group) => group.classList.contains('open'));
   closeGroups();
   if (openGroup) { openGroup.querySelector('.sub-toggle').focus(); return; }
-  if (links.classList.contains('open')) { toggle.click(); toggle.focus(); }
+  if (links.classList.contains('open')) { toggle.click(); toggle.focus(); return; }
+  // Wide screens: a dropdown opened by keyboard focus (CSS :focus-within) closes when focus leaves it.
+  if (document.activeElement.closest('.nav-group')) document.activeElement.blur();
 });
 links.addEventListener('click', (event) => {
   if (!event.target.closest('a')) return;
