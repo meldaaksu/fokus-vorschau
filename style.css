@@ -341,13 +341,15 @@ legend { padding: 0; margin-bottom: 10px; font-size: 15px; font-weight: 500; }
   .split-rev .photo-frame { order: -1; }
   .section { padding: 76px 0; }
   .subject { grid-template-columns: 1fr; padding: 20px 16px 20px 30px; }
-  /* Phones: photo and speech bubble open below the subject line instead of covering it. */
-  .subject img, .bubble, .subject.is-active img, .subject.is-active .bubble { position: static; grid-row: 3; justify-self: start; transform-origin: top left; }
-  .subject img, .bubble { max-height: 0; margin: 0; padding-block: 0; opacity: 0; transform: translateY(-6px) scale(.95); transition: max-height .45s var(--ease), margin .45s var(--ease), padding .45s var(--ease), opacity .3s, transform .45s var(--spring); }
-  .subject img { width: 168px; height: 108px; border: 0; box-shadow: 0 0 0 4px #fff, 0 10px 20px #1b3a6b26; }
-  .bubble { font-size: 15px; white-space: normal; max-width: 100%; }
-  .subject.is-active img { max-height: 108px; margin-top: 14px; opacity: 1; transform: rotate(-2deg); }
-  .subject.is-active .bubble { max-height: 120px; margin-top: 12px; padding-block: 10px; opacity: 1; transform: none; }
+  /* Phones: the active row opens up a little, and a small bubble or photo pops into the new space below the text. */
+  .subject { transition: padding .5s var(--ease); }
+  .subject.is-active:has(.bubble) { padding-bottom: 76px; }
+  .subject.is-active:has(img) { padding-bottom: 128px; }
+  .subject img, .bubble { top: auto; right: auto; bottom: 16px; left: 30px; }
+  .bubble { max-width: calc(100% - 46px); padding: 8px 14px; font-size: 14px; white-space: normal; transform: translateY(14px) scale(.5) rotate(-6deg); transform-origin: bottom left; }
+  .subject img { left: auto; right: 16px; bottom: 14px; width: 132px; height: 88px; border-width: 4px; transform: translateY(16px) scale(.5) rotate(-10deg); }
+  .subject.is-active .bubble { transform: rotate(-2deg); transition: opacity .25s .12s, transform .55s var(--spring) .12s; }
+  .subject.is-active img { transform: rotate(-4deg); transition: opacity .25s .12s, transform .55s var(--spring) .12s; }
   .subject.is-active h3 { transform: none; }
   /* Tilted photos stay inside the screen. */
   .tilt-l, .js .tilt-l.reveal.visible { transform: rotate(-1deg); }
