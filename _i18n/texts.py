@@ -356,3 +356,4 @@ TEXTS.update({
     'Untermenü Kurse': {'tr': 'Kurslar alt menüsü', 'en': 'Courses submenu'},
     'Untermenü Projekte': {'tr': 'Projeler alt menüsü', 'en': 'Projects submenu'},
 })
+TEXTS['Hausaufgaben\u00adbetreuung & mehr'] = TEXTS['Hausaufgabenbetreuung & mehr']   # heading with a soft hyphen, so phones break it after "Hausaufgaben"
