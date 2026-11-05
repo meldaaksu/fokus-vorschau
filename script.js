@@ -1,6 +1,17 @@
 document.documentElement.classList.add('js');
 const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Kurse and Projekte: a link to one topic always opens the page at the top; the chosen card is still highlighted (CSS :target).
+if (document.querySelector('.topics')) {
+  const toTop = () => {
+    if (document.querySelector('.topics li:target')) window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+  history.scrollRestoration = 'manual';
+  toTop();
+  window.addEventListener('load', toTop);
+  window.addEventListener('hashchange', toTop);
+}
+
 // Phone menu
 const toggle = document.querySelector('.menu-toggle');
 const links = document.getElementById('navigation');
