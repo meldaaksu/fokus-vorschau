@@ -449,7 +449,8 @@ legend { padding: 0; margin-bottom: 10px; font-size: 15px; font-weight: 500; }
 .topics li:nth-child(6n) { --c: #c98a1b; --r: .8deg; }
 .topics li:hover { transform: rotate(0) translateY(-6px); box-shadow: 0 2px 0 #1b3a6b14, 0 22px 40px #1b3a6b26; }
 .topics h2 { font-size: clamp(22px, 2.2vw, 27px); line-height: 34px; }
-.topics li:target { outline: 4px solid var(--sun); outline-offset: 6px; animation: wiggle .7s var(--spring) .3s; }
+.topics li:target { outline: 4px solid var(--sun); outline-offset: 6px; }
+.topics li.picked { animation: wiggle .7s var(--spring); } /* added by script.js once the page has glided to the card */
 @keyframes wiggle { 25% { transform: rotate(-3deg) scale(1.03); } 60% { transform: rotate(2deg) scale(1.03); } }
 
 /* About */

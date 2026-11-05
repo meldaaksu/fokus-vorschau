@@ -1,15 +1,58 @@
 document.documentElement.classList.add('js');
 const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Kurse and Projekte: a link to one topic always opens the page at the top; the chosen card is still highlighted (CSS :target).
+// Kurse and Projekte: a link to one topic opens the page at the top, then glides slowly down to the card,
+// which wiggles once it has arrived (its outline comes from CSS :target).
 if (document.querySelector('.topics')) {
-  const toTop = () => {
-    if (document.querySelector('.topics li:target')) window.scrollTo({ top: 0, behavior: 'instant' });
-  };
   history.scrollRestoration = 'manual';
-  toTop();
-  window.addEventListener('load', toTop);
-  window.addEventListener('hashchange', toTop);
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let glide = 0;
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  function wiggle(card) {
+    card.classList.remove('picked');
+    void card.offsetWidth;   // restart the animation when the same card is picked again
+    card.classList.add('picked');
+  }
+  function showTopic() {
+    const card = document.querySelector('.topics li:target');
+    if (!card) return;
+    cancelAnimationFrame(glide);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    const box = card.getBoundingClientRect();
+    const end = Math.max(0, Math.min(box.top + window.scrollY - (window.innerHeight - box.height) / 2,
+      document.documentElement.scrollHeight - window.innerHeight));
+    if (still || end < 40) {   // already in view from the top, or the visitor prefers no motion
+      if (still) window.scrollTo({ top: end, behavior: 'instant' });
+      wiggle(card);
+      return;
+    }
+    const duration = Math.min(2200, 1200 + end * 0.7);   // longer way, a little longer glide
+    let start = null;
+    setTimeout(() => {
+      const step = (now) => {
+        start ??= now;
+        const t = Math.min(1, (now - start) / duration);
+        window.scrollTo({ top: end * ease(t), behavior: 'instant' });
+        if (t < 1) glide = requestAnimationFrame(step);
+        else wiggle(card);
+      };
+      glide = requestAnimationFrame(step);
+    }, 700);   // a short moment at the top first
+  }
+  window.addEventListener('load', showTopic);
+  window.addEventListener('hashchange', showTopic);
+  // Clicking the link of the card that is already chosen changes no hash; glide again anyway.
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href*="#"]');
+    if (!link) return;
+    const url = new URL(link.href);
+    if (url.pathname === location.pathname && url.hash && url.hash === location.hash) {
+      event.preventDefault();
+      showTopic();
+    }
+  });
+  // The browser jumps to the card before the page has loaded; go back to the top straight away.
+  if (document.querySelector('.topics li:target')) window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 // Phone menu
